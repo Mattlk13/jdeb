@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import org.junit.Test;
 import org.junit.Assert;
 
 import org.bouncycastle.openpgp.PGPUtil;
+
+import static java.nio.charset.StandardCharsets.*;
 
 public final class PGPSignerTestCase extends Assert {
 
@@ -52,7 +54,7 @@ public final class PGPSignerTestCase extends Assert {
                 "=aAAT\n" +
                 "-----END PGP SIGNATURE-----\n";
 
-        final byte[] expectedOutput = expectedOutputStr.getBytes("UTF-8");
+        final byte[] expectedOutput = expectedOutputStr.getBytes(UTF_8);
 
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
 

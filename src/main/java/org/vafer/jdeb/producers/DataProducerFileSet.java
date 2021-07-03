@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public final class DataProducerFileSet implements DataProducer {
             filemode = tarfileset.getMode();
             dirmode = tarfileset.getDirMode(tarfileset.getProject());
             prefix = tarfileset.getPrefix(tarfileset.getProject());
-            fullpath = tarfileset.getFullpath();
+            fullpath = tarfileset.getFullpath(tarfileset.getProject());
         }
 
         final DirectoryScanner scanner = fileset.getDirectoryScanner(fileset.getProject());
@@ -92,8 +92,7 @@ public final class DataProducerFileSet implements DataProducer {
             final String name = filename.replace('\\', '/');
             final File file = new File(basedir, name);
 
-            final InputStream inputStream = new FileInputStream(file);
-            try {
+            try (InputStream inputStream = new FileInputStream(file)) {
                 final String entryName = "".equals(fullpath) ? prefix + "/" + name : fullpath;
 
                 final File entryPath = new File(entryName);
@@ -115,8 +114,6 @@ public final class DataProducerFileSet implements DataProducer {
                 e.setSize(file.length());
 
                 pReceiver.onEachFile(inputStream, e);
-            } finally {
-                inputStream.close();
             }
         }
     }

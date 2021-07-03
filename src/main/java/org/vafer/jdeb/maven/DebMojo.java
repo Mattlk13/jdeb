@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -171,7 +171,7 @@ public class DebMojo extends AbstractMojo {
      *
      * @see org.bouncycastle.bcpg.HashAlgorithmTags
      */
-    @Parameter(defaultValue = "SHA1")
+    @Parameter(defaultValue = "SHA256")
     private String digest;
 
     /**
@@ -368,8 +368,8 @@ public class DebMojo extends AbstractMojo {
     private String openReplaceToken = "[[";
     private String closeReplaceToken = "]]";
     private Console console;
-    private Collection<DataProducer> dataProducers = new ArrayList<DataProducer>();
-    private Collection<DataProducer> conffileProducers = new ArrayList<DataProducer>();
+    private Collection<DataProducer> dataProducers = new ArrayList<>();
+    private Collection<DataProducer> conffileProducers = new ArrayList<>();
 
     public void setOpenReplaceToken( String openReplaceToken ) {
         this.openReplaceToken = openReplaceToken;
@@ -394,14 +394,10 @@ public class DebMojo extends AbstractMojo {
         }
     }
 
+    @SuppressWarnings("unchecked,rawtypes")
     protected VariableResolver initializeVariableResolver( Map<String, String> variables ) {
-        @SuppressWarnings("unchecked")
-        final Map<String, String> projectProperties = Map.class.cast(getProject().getProperties());
-        @SuppressWarnings("unchecked")
-        final Map<String, String> systemProperties = Map.class.cast(System.getProperties());
-
-        variables.putAll(projectProperties);
-        variables.putAll(systemProperties);
+        variables.putAll((Map) getProject().getProperties());
+        variables.putAll((Map) System.getProperties());
         variables.put("name", name != null ? name : getProject().getName());
         variables.put("artifactId", getProject().getArtifactId());
         variables.put("groupId", getProject().getGroupId());
@@ -519,23 +515,19 @@ public class DebMojo extends AbstractMojo {
         if (dataProducers.isEmpty()) {
 
             if (hasMainArtifact()) {
-                Set<Artifact> artifacts = new HashSet<Artifact>();
+                Set<Artifact> artifacts = new HashSet<>();
 
                 artifacts.add(project.getArtifact());
 
                 @SuppressWarnings("unchecked")
                 final Set<Artifact> projectArtifacts = project.getArtifacts();
 
-                for (Artifact artifact : projectArtifacts) {
-                    artifacts.add(artifact);
-                }
+                artifacts.addAll(projectArtifacts);
 
                 @SuppressWarnings("unchecked")
                 final List<Artifact> attachedArtifacts = project.getAttachedArtifacts();
 
-                for (Artifact artifact : attachedArtifacts) {
-                    artifacts.add(artifact);
-                }
+                artifacts.addAll(attachedArtifacts);
 
                 for (Artifact artifact : artifacts) {
                     final File file = artifact.getFile();
@@ -727,8 +719,8 @@ public class DebMojo extends AbstractMojo {
             return Collections.emptyMap();
         }
 
-        final Map<String, String> map = new HashMap<String, String>();
-        final Set<String> activeProfiles = new HashSet<String>(activeProfilesList);
+        final Map<String, String> map = new HashMap<>();
+        final Set<String> activeProfiles = new HashSet<>(activeProfilesList);
 
         // Iterate over all active profiles in order
         for (final Profile profile : settings.getProfiles()) {

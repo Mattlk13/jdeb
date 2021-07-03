@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,7 @@ class DataBuilder {
 
         final Total dataSize = new Total();
 
-        final List<String> addedDirectories = new ArrayList<String>();
+        final List<String> addedDirectories = new ArrayList<>();
         final DataConsumer receiver = new DataConsumer() {
 
             public void onEachDir(TarArchiveEntry dirEntry) throws IOException {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,8 +58,8 @@ public final class TextfileChangesProvider implements ChangesProvider {
         String distribution = packageControlFile.get("Distribution");
         String urgency = packageControlFile.get("Urgency");
         String changedBy = packageControlFile.get("Maintainer");
-        Collection<String> changesColl = new ArrayList<String>();
-        Collection<ChangeSet> changeSetColl = new ArrayList<ChangeSet>();
+        Collection<String> changesColl = new ArrayList<>();
+        Collection<ChangeSet> changeSetColl = new ArrayList<>();
 
 
         while (true) {

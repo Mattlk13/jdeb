@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.security.GeneralSecurityException;
 import java.util.Iterator;
 
 import org.apache.commons.io.LineIterator;
@@ -41,12 +39,14 @@ import org.bouncycastle.openpgp.operator.bc.BcPGPContentSignerBuilder;
 import org.bouncycastle.openpgp.operator.bc.BcPGPDigestCalculatorProvider;
 import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
 
+import static java.nio.charset.StandardCharsets.*;
+
 /**
  * Signing with OpenPGP.
  */
 public class PGPSigner {
 
-    private static final byte[] EOL = "\n".getBytes(Charset.forName("UTF-8"));
+    private static final byte[] EOL = "\n".getBytes(UTF_8);
 
     private PGPSecretKey secretKey;
     private PGPPrivateKey privateKey;
@@ -68,8 +68,8 @@ public class PGPSigner {
      * @param input      the content to be signed
      * @param output     the output destination of the signature
      */
-    public void clearSign(String input, OutputStream output) throws IOException, PGPException, GeneralSecurityException {
-        clearSign(new ByteArrayInputStream(input.getBytes("UTF-8")), output);
+    public void clearSign(String input, OutputStream output) throws IOException, PGPException {
+        clearSign(new ByteArrayInputStream(input.getBytes(UTF_8)), output);
     }
 
     /**
@@ -78,7 +78,7 @@ public class PGPSigner {
      * @param input      the content to be signed
      * @param output     the output destination of the signature
      */
-    public void clearSign(InputStream input, OutputStream output) throws IOException, PGPException, GeneralSecurityException {
+    public void clearSign(InputStream input, OutputStream output) throws IOException, PGPException {
 
         PGPSignatureGenerator signatureGenerator = new PGPSignatureGenerator(new BcPGPContentSignerBuilder(privateKey.getPublicKeyPacket().getAlgorithm(), digest));
         signatureGenerator.init(PGPSignature.CANONICAL_TEXT_DOCUMENT, privateKey);
@@ -92,7 +92,7 @@ public class PGPSigner {
             String line = iterator.nextLine();
 
             // trailing spaces must be removed for signature calculation (see http://tools.ietf.org/html/rfc4880#section-7.1)
-            byte[] data = trim(line).getBytes("UTF-8");
+            byte[] data = trim(line).getBytes(UTF_8);
 
             armoredOutput.write(data);
             armoredOutput.write(EOL);
@@ -136,14 +136,14 @@ public class PGPSigner {
     private PGPSecretKey getSecretKey(InputStream input, String keyId) throws IOException, PGPException {
         PGPSecretKeyRingCollection keyrings = new PGPSecretKeyRingCollection(PGPUtil.getDecoderStream(input), new JcaKeyFingerprintCalculator());
 
-        Iterator rIt = keyrings.getKeyRings();
+        Iterator<PGPSecretKeyRing> rIt = keyrings.getKeyRings();
 
         while (rIt.hasNext()) {
-            PGPSecretKeyRing kRing = (PGPSecretKeyRing) rIt.next();
-            Iterator kIt = kRing.getSecretKeys();
+            PGPSecretKeyRing kRing = rIt.next();
+            Iterator<PGPSecretKey> kIt = kRing.getSecretKeys();
 
             while (kIt.hasNext()) {
-                PGPSecretKey key = (PGPSecretKey) kIt.next();
+                PGPSecretKey key = kIt.next();
 
                 if (key.isSigningKey() && String.format("%08x", key.getKeyID() & 0xFFFFFFFFL).equals(keyId.toLowerCase())) {
                     return key;

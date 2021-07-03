@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public final class FilteredFileTestCase extends Assert {
 
     @Before
     public void setUp() throws Exception {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("artifactId", "jdeb");
         map.put("myProperty1", "custom1");
         map.put("myProperty2", "custom2");
@@ -56,8 +56,8 @@ public final class FilteredFileTestCase extends Assert {
         HashMap<String, String> table = new HashMap<String, String>() {{
             put("#!/bin/bash\nif [[ -z \"$(grep [[artifactId]] /etc/passwd )\" ]] ; then\n",
                 "#!/bin/bash\nif [[ -z \"$(grep jdeb /etc/passwd )\" ]] ; then\n");
-            put("#!/usr/bin/python3 -B\nline = line.replace(\'@ALLOW_BATCH_FILTER@\', config[self.client][\'ALLOW_BATCH_FILTER\'])\n",
-                "#!/usr/bin/python3 -B\nline = line.replace(\'@ALLOW_BATCH_FILTER@\', config[self.client][\'ALLOW_BATCH_FILTER\'])\n");
+            put("#!/usr/bin/python3 -B\nline = line.replace('@ALLOW_BATCH_FILTER@', config[self.client]['ALLOW_BATCH_FILTER'])\n",
+                "#!/usr/bin/python3 -B\nline = line.replace('@ALLOW_BATCH_FILTER@', config[self.client]['ALLOW_BATCH_FILTER'])\n");
         }};
 
         for (Map.Entry<String,String> pair : table.entrySet()){
@@ -76,7 +76,7 @@ public final class FilteredFileTestCase extends Assert {
 
     @Test
     public void testVariableSubstitution() throws Exception {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("VERSION", "1.2");
         map.put("MAINTAINER", "Torsten Curdt <tcurdt@vafer.org>");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,15 +70,9 @@ public final class DataBuilderTestCase extends Assert {
         builder.buildData(Arrays.asList(producer), archive, new StringBuilder(), new TarOptions().compression(Compression.NONE));
 
         int count = 0;
-        TarArchiveInputStream in = null;
-        try {
-            in = new TarArchiveInputStream(new FileInputStream(archive));
+        try (TarArchiveInputStream in = new TarArchiveInputStream(new FileInputStream(archive))) {
             while (in.getNextTarEntry() != null) {
                 count++;
-            }
-        } finally {
-            if (in != null) {
-                in.close();
             }
         }
 

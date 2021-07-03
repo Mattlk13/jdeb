@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,16 +38,16 @@ public class ControlField {
     }
 
     /** The name of the field */
-    private String name;
+    private final String name;
 
     /** Tells if the field is mandatory */
-    private boolean mandatory;
+    private final boolean mandatory;
 
     /** The type of the field */
-    private Type type = Type.SIMPLE;
+    private final Type type;
 
     /** Tells is the first line of the field must be empty (for MULTILINE values only) */
-    private boolean firstLineEmpty;
+    private final boolean firstLineEmpty;
 
 
     public ControlField(String name) {

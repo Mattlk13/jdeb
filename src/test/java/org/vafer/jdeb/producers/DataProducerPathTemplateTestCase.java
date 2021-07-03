@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,12 +69,12 @@ public final class DataProducerPathTemplateTestCase extends Assert {
         assertEquals(invocation.user, "root");
     }
 
-    public class CaptureDataConsumer implements DataConsumer {
+    public static class CaptureDataConsumer implements DataConsumer {
 
         private List<Invocation> invocations;
 
         public CaptureDataConsumer() {
-            invocations = new ArrayList<Invocation>();
+            invocations = new ArrayList<>();
         }
 
         public void onEachDir(TarArchiveEntry dirEntry) throws IOException {

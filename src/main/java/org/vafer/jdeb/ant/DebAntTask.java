@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,15 +69,15 @@ public class DebAntTask extends MatchingTask {
      *
      * @see org.bouncycastle.bcpg.HashAlgorithmTags
      */
-    private String digest = "SHA1";
+    private String digest = "SHA256";
 
     /** Trigger the verbose mode detailing all operations */
     private boolean verbose;
 
-    private Collection<Link> links = new ArrayList<Link>();
+    private Collection<Link> links = new ArrayList<>();
 
-    private Collection<DataProducer> dataProducers = new ArrayList<DataProducer>();
-    private Collection<DataProducer> conffilesProducers = new ArrayList<DataProducer>();
+    private Collection<DataProducer> dataProducers = new ArrayList<>();
+    private Collection<DataProducer> conffilesProducers = new ArrayList<>();
 
 
     public void setDestfile( File deb ) {

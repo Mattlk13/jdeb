@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,11 +67,7 @@ public final class Data implements DataProducer {
     private MissingSourceBehavior missingSrc = FAIL;
 
     public void setMissingSrc( String missingSrc ) {
-        MissingSourceBehavior value = MissingSourceBehavior.valueOf(missingSrc.trim().toUpperCase());
-        if (value == null) {
-            throw new IllegalArgumentException("Unknown " + MissingSourceBehavior.class.getSimpleName() + ": " + missingSrc);
-        }
-        this.missingSrc = value;
+        this.missingSrc = MissingSourceBehavior.valueOf(missingSrc.trim().toUpperCase());
     }
 
     @Parameter
@@ -136,7 +132,7 @@ public final class Data implements DataProducer {
     public String[] splitPatterns( String patterns ) {
         String[] result = null;
         if (patterns != null && patterns.length() > 0) {
-            List<String> tokens = new ArrayList<String>();
+            List<String> tokens = new ArrayList<>();
             StringTokenizer tok = new StringTokenizer(patterns, ", ", false);
             while (tok.hasMoreTokens()) {
                 tokens.add(tok.nextToken());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ drwxr-xr-x    4 tcurdt  tcurdt   136 Jun 25 03:48 classes
 
     final private Pattern basePattern = Pattern.compile("^\\./(.*):$");
     final private Pattern totalPattern = Pattern.compile("^total ([0-9]+)$");
-    final private Pattern dirPattern = Pattern.compile("^d([rwx-]{9})\\s+([0-9]+)\\s+(\\S*)\\s+(\\S*)\\s+([0-9]+)\\s+(.*)\\s+[\\.]{1,2}$");
+    final private Pattern dirPattern = Pattern.compile("^d([rwx-]{9})\\s+([0-9]+)\\s+(\\S*)\\s+(\\S*)\\s+([0-9]+)\\s+(.*)\\s+[.]{1,2}$");
     final private Pattern filePattern = Pattern.compile("^([d-])([rwx-]{9})\\s+([0-9]+)\\s+(\\S*)\\s+(\\S*)\\s+([0-9]+)\\s+(.*)\\s+(.*)$");
     final private Pattern newlinePattern = Pattern.compile("$");
 
@@ -176,7 +176,7 @@ drwxr-xr-x    4 tcurdt  tcurdt   136 Jun 25 03:48 classes
     }
 
     private Map<String, TarArchiveEntry> parse( final InputStream pInput ) throws IOException, ParseError {
-        final Map<String, TarArchiveEntry> mapping = new HashMap<String, TarArchiveEntry>();
+        final Map<String, TarArchiveEntry> mapping = new HashMap<>();
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader(pInput));
 

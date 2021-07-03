@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public final class DebMakerTestCase extends Assert {
 
 	        assertTrue(packageControlFile.isValid());
 
-	        final Map<String, TarArchiveEntry> filesInDeb = new HashMap<String, TarArchiveEntry>();
+	        final Map<String, TarArchiveEntry> filesInDeb = new HashMap<>();
 
 	        ArchiveWalker.walkData(deb, new ArchiveVisitor<TarArchiveEntry>() {
 	            public void visit(TarArchiveEntry entry, byte[] content) throws IOException {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,10 +56,10 @@ public final class PermMapper implements Mapper {
     }
 
     public TarArchiveEntry map( final TarArchiveEntry entry ) {
-        entry.setName(Utils.joinUnixPath(
-                prefix,
-                Utils.stripPath(strip, entry.getName()
-                )));
+        entry.setName(Utils.stripLeadingSlash(Utils.joinUnixPath(
+            prefix,
+            Utils.stripPath(strip, entry.getName())
+        )));
 
         // Set ownership
         if (uid > -1) {

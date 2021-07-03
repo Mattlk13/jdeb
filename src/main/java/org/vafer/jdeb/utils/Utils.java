@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,9 +41,9 @@ import org.apache.tools.ant.util.ReaderInputStream;
  * ATTENTION: don't use outside of jdeb
  */
 public final class Utils {
-    private static final Pattern BETA_PATTERN = Pattern.compile("^(?:(?:(.*?)([\\.\\-_]))|(.*[^a-z]))(alpha|a|beta|b|milestone|m|cr|rc)([^a-z].*)?$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern BETA_PATTERN = Pattern.compile("^(?:(?:(.*?)([.\\-_]))|(.*[^a-z]))(alpha|a|beta|b|milestone|m|cr|rc)([^a-z].*)?$", Pattern.CASE_INSENSITIVE);
 
-    private static final Pattern SNAPSHOT_PATTERN = Pattern.compile("(.*)[\\-\\+]SNAPSHOT");
+    private static final Pattern SNAPSHOT_PATTERN = Pattern.compile("(.*)[\\-+]SNAPSHOT");
 
     public static int copy( final InputStream pInput, final OutputStream pOutput ) throws IOException {
         final byte[] buffer = new byte[2048];
@@ -88,12 +88,10 @@ public final class Utils {
         final StringBuilder sb = new StringBuilder();
         for (String p : paths) {
             if (p == null) continue;
-            if (p.startsWith("/")) {
-                sb.append(p);
-            } else {
+            if (!p.startsWith("/") && sb.length() > 0) {
                 sb.append(sep);
-                sb.append(p);
             }
+            sb.append(p);
         }
         return sb.toString();
     }
@@ -285,7 +283,7 @@ public final class Utils {
 
         // safest upstream_version should only contain full stop, plus, tilde, and alphanumerics
         // https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version
-        version = version.replaceAll("[^\\.+~A-Za-z0-9]", "+").replaceAll("\\++", "+");
+        version = version.replaceAll("[^.+~A-Za-z0-9]", "+").replaceAll("\\++", "+");
 
         return version;
     }
@@ -323,7 +321,7 @@ public final class Utils {
     *         null otherwise
     */
     public static Collection<String> getKnownPGPSecureRingLocations() {
-        final LinkedHashSet<String> locations = new LinkedHashSet<String>();
+        final LinkedHashSet<String> locations = new LinkedHashSet<>();
 
         final String os = System.getProperty("os.name");
         final boolean runOnWindows = os == null || os.toLowerCase().contains("win");
@@ -435,7 +433,7 @@ public final class Utils {
             return true;
         }
         for (int i = 0; i < strLen; i++) {
-            if (Character.isWhitespace(cs.charAt(i)) == false) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
                 return false;
             }
         }

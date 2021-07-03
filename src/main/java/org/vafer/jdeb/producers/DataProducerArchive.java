@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ public final class DataProducerArchive extends AbstractDataProducer implements D
             is = new BufferedInputStream(compressorInputStream);
         }
 
-        ArchiveInputStream archiveInputStream = null;
+        ArchiveInputStream archiveInputStream;
 
         try {
             archiveInputStream = new ArchiveStreamFactory().createArchiveInputStream(is);
@@ -72,7 +72,7 @@ public final class DataProducerArchive extends AbstractDataProducer implements D
             throw new IOException("Unsupported archive format: " + archive, e);
         }
 
-        EntryConverter converter = null;
+        EntryConverter converter;
 
         if (archiveInputStream instanceof TarArchiveInputStream) {
 
@@ -142,6 +142,6 @@ public final class DataProducerArchive extends AbstractDataProducer implements D
     }
 
     private interface EntryConverter {
-        public TarArchiveEntry convert( ArchiveEntry entry );
+        TarArchiveEntry convert( ArchiveEntry entry );
     }
 }

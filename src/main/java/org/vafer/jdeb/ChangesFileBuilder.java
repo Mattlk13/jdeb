@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class ChangesFileBuilder {
 
         try {
             // compute the checksums of the binary package
-            InformationOutputStream md5output = new InformationOutputStream(new NullOutputStream(), MessageDigest.getInstance("MD5"));
+            InformationOutputStream md5output = new InformationOutputStream(NullOutputStream.NULL_OUTPUT_STREAM, MessageDigest.getInstance("MD5"));
             InformationOutputStream sha1output = new InformationOutputStream(md5output, MessageDigest.getInstance("SHA1"));
             InformationOutputStream sha256output = new InformationOutputStream(sha1output, MessageDigest.getInstance("SHA-256"));
 

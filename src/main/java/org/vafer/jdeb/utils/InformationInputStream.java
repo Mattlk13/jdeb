@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ public final class InformationInputStream extends FilterInputStream {
     private long lf;
     private long zero;
 
-    private final Map<BOM, Integer> bomPositions = new HashMap<BOM, Integer>();
-    private final Map<Shell, Integer> shellPositions = new HashMap<Shell, Integer>();
+    private final Map<BOM, Integer> bomPositions = new HashMap<>();
+    private final Map<Shell, Integer> shellPositions = new HashMap<>();
 
     /**
      * Byte Order Marks
@@ -46,7 +46,7 @@ public final class InformationInputStream extends FilterInputStream {
         int[] sequence;
         String encoding;
 
-        private BOM( String encoding, int... sequence ) {
+        BOM( String encoding, int... sequence ) {
             this.encoding = encoding;
             this.sequence = sequence;
         }
@@ -63,7 +63,7 @@ public final class InformationInputStream extends FilterInputStream {
 
         int[] header;
 
-        private Shell( int... header ) {
+        Shell( int... header ) {
             this.header = header;
         }
     }

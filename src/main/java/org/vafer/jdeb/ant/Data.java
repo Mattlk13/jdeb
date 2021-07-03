@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import static org.vafer.jdeb.ant.MissingSourceBehavior.*;
  */
 public final class Data extends PatternSet implements DataProducer {
 
-    private final Collection<Mapper> mapperWrapper = new ArrayList<Mapper>();
+    private final Collection<Mapper> mapperWrapper = new ArrayList<>();
 
     private File src;
 
@@ -80,11 +80,7 @@ public final class Data extends PatternSet implements DataProducer {
 
 
     public void setMissingSrc( String missingSrc ) {
-        MissingSourceBehavior value = MissingSourceBehavior.valueOf(missingSrc.trim().toUpperCase());
-        if (value == null) {
-            throw new IllegalArgumentException("Unknown " + MissingSourceBehavior.class.getSimpleName() + ": " + missingSrc);
-        }
-        this.missingSrc = value;
+        this.missingSrc = MissingSourceBehavior.valueOf(missingSrc.trim().toUpperCase());
     }
 
     public void produce( final DataConsumer pReceiver ) throws IOException {

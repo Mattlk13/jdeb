@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,21 +30,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.nio.charset.StandardCharsets.*;
+
 /**
  * A control file as specified by the <a href="http://www.debian.org/doc/debian-policy/ch-controlfields.html">Debian policy</a>.
  */
 public abstract class ControlFile {
 
-    protected final Map<String, String> values = new LinkedHashMap<String, String>();
-    protected final Map<String, String> userDefinedFields = new LinkedHashMap<String, String>();
-    protected final Set<ControlField> userDefinedFieldNames = new HashSet<ControlField>();
+    protected final Map<String, String> values = new LinkedHashMap<>();
+    protected final Map<String, String> userDefinedFields = new LinkedHashMap<>();
+    protected final Set<ControlField> userDefinedFieldNames = new HashSet<>();
 
     public void parse(String input) throws IOException, ParseException {
-        parse(new ByteArrayInputStream(input.getBytes("UTF-8")));
+        parse(new ByteArrayInputStream(input.getBytes(UTF_8)));
     }
 
     public void parse(InputStream input) throws IOException, ParseException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input, UTF_8));
         StringBuilder buffer = new StringBuilder();
         String field = null;
         int linenr = 0;
@@ -132,7 +134,7 @@ public abstract class ControlFile {
     }
 
     public List<String> getMandatoryFields() {
-        List<String> fields = new ArrayList<String>();
+        List<String> fields = new ArrayList<>();
 
         for (ControlField field : getFields()) {
             if (field.isMandatory()) {
@@ -148,7 +150,7 @@ public abstract class ControlFile {
     }
 
     public Set<String> invalidFields() {
-        Set<String> invalid = new HashSet<String>();
+        Set<String> invalid = new HashSet<>();
 
         for (ControlField field : getFields()) {
             if (field.isMandatory() && get(field.getName()) == null) {
@@ -169,7 +171,7 @@ public abstract class ControlFile {
     }
 
     public String toString() {
-        List<ControlField> fields = new ArrayList<ControlField>();
+        List<ControlField> fields = new ArrayList<>();
         fields.addAll(Arrays.asList(getFields()));
         fields.addAll(getUserDefinedFieldNames());
         return toString(fields.toArray(new ControlField[fields.size()]));

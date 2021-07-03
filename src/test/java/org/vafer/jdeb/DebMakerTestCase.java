@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ import org.vafer.jdeb.producers.DataProducerLink;
 import org.vafer.jdeb.utils.InformationInputStream;
 import org.vafer.jdeb.utils.MapVariableResolver;
 
+import static java.nio.charset.StandardCharsets.*;
+
 public final class DebMakerTestCase extends Assert {
 
     @Test
@@ -66,7 +68,7 @@ public final class DebMakerTestCase extends Assert {
 
         assertTrue(packageControlFile.isValid());
 
-        final Map<String, TarArchiveEntry> filesInDeb = new HashMap<String, TarArchiveEntry>();
+        final Map<String, TarArchiveEntry> filesInDeb = new HashMap<>();
 
         ArchiveWalker.walkData(deb, new ArchiveVisitor<TarArchiveEntry>() {
             public void visit(TarArchiveEntry entry, byte[] content) throws IOException {
@@ -133,7 +135,7 @@ public final class DebMakerTestCase extends Assert {
             fail("Couldn't delete " + deb);
         }
 
-        Map<String, String> variables = new HashMap<String, String>();
+        Map<String, String> variables = new HashMap<>();
         variables.put("name", "jdeb");
         variables.put("version", "1.0");
 
@@ -152,12 +154,12 @@ public final class DebMakerTestCase extends Assert {
         boolean found = ArchiveWalker.walkControl(deb, new ArchiveVisitor<TarArchiveEntry>() {
             public void visit(TarArchiveEntry entry, byte[] content) throws IOException {
                 if (entry.getName().contains("postinst") || entry.getName().contains("prerm")) {
-                    String body = new String(content, "UTF-8");
+                    String body = new String(content, UTF_8);
                     assertFalse("Variables not replaced in the control file " + entry.getName(), body.contains("[[name]] [[version]]"));
                     assertTrue("Expected variables not found in the control file " + entry.getName(), body.contains("jdeb 1.0"));
                 }
                 if (entry.getName().contains("control")) {
-                    String control = new String(content, "UTF-8");
+                    String control = new String(content, UTF_8);
                     assertTrue("Depends missing" + entry.getName(), control.contains("Depends: some-package"));
                 }
             }
@@ -187,7 +189,7 @@ public final class DebMakerTestCase extends Assert {
         boolean found = ArchiveWalker.walkControl(deb, new ArchiveVisitor<TarArchiveEntry>() {
             public void visit(TarArchiveEntry entry, byte[] content) throws IOException {
                 if (entry.getName().contains("control")) {
-                    String control = new String(content, "ISO-8859-1");
+                    String control = new String(content, ISO_8859_1);
                     assertFalse("Depends should be omitted in the control file " + entry.getName(), control.contains("Depends:"));
                 }
             }
@@ -221,7 +223,7 @@ public final class DebMakerTestCase extends Assert {
         boolean found = ArchiveWalker.walkControl(deb, new ArchiveVisitor<TarArchiveEntry>() {
             public void visit(TarArchiveEntry entry, byte[] content) throws IOException {
                 if (entry.getName().contains("control")) {
-                    String control = new String(content, "ISO-8859-1");
+                    String control = new String(content, ISO_8859_1);
 
                     assertTrue("Depends should be present in the control file " + entry.getName(), control.contains("Depends:"));
                     assertTrue("The control file " + entry.getName() + " should specify intended dependency '" + dependsString + "'",

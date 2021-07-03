@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
@@ -129,10 +130,10 @@ public class DebMaker {
     private String openReplaceToken;
     private String closeReplaceToken;
 
-    private final Collection<DataProducer> dataProducers = new ArrayList<DataProducer>();
+    private final Collection<DataProducer> dataProducers = new ArrayList<>();
 
-    private final Collection<DataProducer> conffilesProducers = new ArrayList<DataProducer>();
-    private String digest = "SHA1";
+    private final Collection<DataProducer> conffilesProducers = new ArrayList<>();
+    private String digest = "SHA256";
 
     public DebMaker(Console console, Collection<DataProducer> dataProducers, Collection<DataProducer> conffileProducers) {
         this.console = console;
@@ -309,31 +310,23 @@ public class DebMaker {
             console.info("Creating debian package: " + deb);
 
             // If we should sign the package
-            boolean doSign = signPackage;
-
-            if (doSign) {
+            if (signPackage) {
 
                 if (keyring == null || !keyring.exists()) {
-                    doSign = false;
                     console.warn("Signing requested, but no keyring supplied");
                 }
 
                 if (key == null) {
-                    doSign = false;
                     console.warn("Signing requested, but no key supplied");
                 }
 
                 if (passphrase == null) {
-                    doSign = false;
                     console.warn("Signing requested, but no passphrase supplied");
                 }
 
-                FileInputStream keyRingInput = new FileInputStream(keyring);
-                PGPSigner signer = null;
-                try {
-                    signer = new PGPSigner(new FileInputStream(keyring), key, passphrase, getDigestCode(digest));
-                } finally {
-                    keyRingInput.close();
+                PGPSigner signer;
+                try (FileInputStream keyRingInput = new FileInputStream(keyring)) {
+                    signer = new PGPSigner(keyRingInput, key, passphrase, getDigestCode(digest));
                 }
 
                 PGPSignatureGenerator signatureGenerator = new PGPSignatureGenerator(new BcPGPContentSignerBuilder(signer.getSecretKey().getPublicKey().getAlgorithm(), getDigestCode(digest)));
@@ -393,7 +386,7 @@ public class DebMaker {
                 PGPSigner signer = new PGPSigner(new FileInputStream(keyring), key, passphrase, getDigestCode(digest));
                 signer.clearSign(changesFile.toString(), out);
             } else {
-                out.write(changesFile.toString().getBytes("UTF-8"));
+                out.write(changesFile.toString().getBytes(StandardCharsets.UTF_8));
             }
             out.flush();
 
@@ -418,7 +411,7 @@ public class DebMaker {
     }
 
     private List<String> populateConffiles(Collection<DataProducer> producers) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
 
         if (producers == null || producers.isEmpty()) {
             return result;
@@ -542,7 +535,7 @@ public class DebMaker {
                 }
 
                 // Use debsig-verify as default
-                if(signMethod == null || !"dpkg-sig".equals(signMethod)) {
+                if (!"dpkg-sig".equals(signMethod)) {
                     // Sign file to verify with debsig-verify
                     PGPSignatureOutputStream sigStream = new PGPSignatureOutputStream(signatureGenerator);
 
@@ -618,7 +611,7 @@ public class DebMaker {
         return null;
     }
 
-    private String md5Hash(byte input[]){
+    private String md5Hash(byte[] input){
         //update the input of MD5
         MD5Digest md5 = new MD5Digest();
         md5.update(input, 0, input.length);
@@ -645,7 +638,7 @@ public class DebMaker {
         return null;
     }
 
-    private String sha1Hash(byte input[]){
+    private String sha1Hash(byte[] input){
         try
         {
             //prepare the input
@@ -676,11 +669,8 @@ public class DebMaker {
     private void addTo(ArArchiveOutputStream pOutput, String pName, File pContent) throws IOException {
         pOutput.putArchiveEntry(new ArArchiveEntry(pName, pContent.length()));
 
-        final InputStream input = new FileInputStream(pContent);
-        try {
+        try (InputStream input = new FileInputStream(pContent)) {
             Utils.copy(input, pOutput);
-        } finally {
-            input.close();
         }
 
         pOutput.closeArchiveEntry();
@@ -692,11 +682,8 @@ public class DebMaker {
     }
 
     private void addTo(final PGPSignatureOutputStream pOutput, final File pContent) throws IOException {
-        final InputStream input = new FileInputStream(pContent);
-        try {
+        try (InputStream input = new FileInputStream(pContent)) {
             Utils.copy(input, pOutput);
-        } finally {
-            input.close();
         }
     }
 

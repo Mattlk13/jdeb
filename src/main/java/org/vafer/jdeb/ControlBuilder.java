@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,16 +43,18 @@ import org.vafer.jdeb.utils.InformationInputStream;
 import org.vafer.jdeb.utils.Utils;
 import org.vafer.jdeb.utils.VariableResolver;
 
+import static java.nio.charset.StandardCharsets.*;
+
 /**
  * Builds the control archive of the Debian package.
  */
 class ControlBuilder {
 
     /** The name of the package maintainer scripts */
-    private static final Set<String> MAINTAINER_SCRIPTS = new HashSet<String>(Arrays.asList("preinst", "postinst", "prerm", "postrm", "config"));
+    private static final Set<String> MAINTAINER_SCRIPTS = new HashSet<>(Arrays.asList("preinst", "postinst", "prerm", "postrm", "config"));
 
     /** The name of the other control files subject to token substitution */
-    private static final Set<String> CONFIGURATION_FILENAMES = new HashSet<String>(Arrays.asList("conffiles", "templates", "triggers", "copyright"));
+    private static final Set<String> CONFIGURATION_FILENAMES = new HashSet<>(Arrays.asList("conffiles", "templates", "triggers", "copyright"));
 
     private Console console;
     private VariableResolver resolver;
@@ -71,7 +73,7 @@ class ControlBuilder {
      *
      * @param packageControlFile the package control file
      * @param controlFiles the other control information files (maintainer scripts, etc)
-     * @param dataSize  the size of the installed package
+     * @param conffiles    the configuration files
      * @param checksums the md5 checksums of the files in the data archive
      * @param output
      * @return
@@ -207,7 +209,7 @@ class ControlBuilder {
 
 
     private static void addControlEntry(final String pName, final String pContent, final TarArchiveOutputStream pOutput) throws IOException {
-        final byte[] data = pContent.getBytes("UTF-8");
+        final byte[] data = pContent.getBytes(UTF_8);
 
         final TarArchiveEntry entry = new TarArchiveEntry("./" + pName, true);
         entry.setSize(data.length);

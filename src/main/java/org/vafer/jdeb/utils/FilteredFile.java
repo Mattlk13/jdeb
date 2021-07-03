@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2019 The jdeb developers.
+ * Copyright 2007-2021 The jdeb developers.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public class FilteredFile {
 
     private String openToken = "[[";
     private String closeToken = "]]";
-    private List<String> lines = new ArrayList<String>();
+    private List<String> lines = new ArrayList<>();
 
     public FilteredFile(InputStream in, VariableResolver resolver) throws IOException {
         parse(in, resolver);
@@ -42,9 +42,7 @@ public class FilteredFile {
     }
 
     private void parse(InputStream in, VariableResolver resolver) throws IOException {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(in));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (resolver != null) {
@@ -52,10 +50,6 @@ public class FilteredFile {
                 } else {
                     lines.add(line);
                 }
-            }
-        } finally {
-            if (reader != null) {
-                reader.close();
             }
         }
     }

@@ -1,6 +1,12 @@
-## Version 1.9, released xx.03.2020
+## Version 1.10, in development
 
-* [CHG] Upgraded plugins and dependencies, now requires maven 3.3.9 and java 1.7
+* [CHG] The default digest algorithm for PGP signatures is now SHA-256 instead of SHA-1
+
+## Version 1.9, released 05.06.2021
+
+* [CHG] Upgraded plugins and dependencies, now requires maven 3.6.0 and java 1.7
+* [ADD] Added project.inceptionYear, project.organization.name, and project.organization.url to the variable expansions (Thanks to Adam Retter)
+* [ADD] Also interpolate the copyright file (Thanks to Adam Retter)
 
 ## Version 1.8, released 24.08.2019
 
